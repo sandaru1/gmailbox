@@ -35,6 +35,8 @@ class Tray(gobject.GObject):
 		self.eventBox = gtk.EventBox()
 
 		self.eventBox.set_events(gtk.gdk.BUTTON_PRESS_MASK)
+		self.eventBox.connect_object('enter_notify_event', self.on_enter, self.eventBox)
+		self.eventBox.connect_object('leave_notify_event', self.on_leave, self.eventBox)
 		self.eventBox.connect_object('button_press_event', self.on_click, self.eventBox)
 
 		self.eventBox.add(self.image)
@@ -43,6 +45,12 @@ class Tray(gobject.GObject):
 
 		self.eventBox.show_all()
 		self.tray.show_all()
+		
+	def on_enter(self, widget, event):
+		self.emit("tooltip",True)
+
+	def on_leave(self, widget, event):
+		self.emit("tooltip",False)
 
 	def on_click(self, widget, event):
 		if event.type == gtk.gdk.BUTTON_PRESS:
